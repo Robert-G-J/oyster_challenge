@@ -57,9 +57,11 @@ describe Oystercard do
       end
     end
 
-  describe "#station" do
+  describe "#journeys" do
     let(:entry_station) { double(:entry_station) }
     let(:exit_station) { double(:exit_station) }
+    let(:journey) { {entry: entry_station, exit: exit_station} }
+
       xit "stores an instance of Station" do
         oystercard.top_up(10)
         oystercard.touch_in(entry_station)
@@ -73,20 +75,20 @@ describe Oystercard do
         expect(oystercard.entry_station).to be_nil
       end
 
-      it { is_expected.to respond_to :all_stations }
+      xit { is_expected.to respond_to :all_stations }
 
-      xit "should displayed us all the previous stations" do
+      xit "should display all the previous stations" do
         oystercard.top_up(20)
         oystercard.touch_in(entry_station)
         oystercard.touch_out
-        expect(oystercard.all_stations).to eq [entry_station]
+        expect(oystercard.journeys).to eq [entry_station]
       end
 
-      it "should display a complete journey" do
+      xit "should store a journey" do
         oystercard.top_up(20)
         oystercard.touch_in(entry_station)
         oystercard.touch_out(exit_station)
-        expect(oystercard.all_stations).to eq [entry_station, exit_station]
+        expect(oystercard.journeys).to eq [entry_station, exit_station]
       end
 
 
@@ -94,10 +96,9 @@ describe Oystercard do
        oystercard.top_up(20)
        oystercard.touch_in(entry_station)
        oystercard.touch_out(exit_station)
-       expect(oystercard.all_stations).to eq {[entry_station, exit_station]}
+       expect(oystercard.journeys).to include journey
      end
 
-
     end
-    end
+  end
 end

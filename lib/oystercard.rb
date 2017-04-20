@@ -19,13 +19,11 @@ class Oystercard
 
   def touch_in(station)
     raise 'Not enough funds' if balance < LOW_BALANCE
-    raise 'Already travelling' if in_journey?
     store_entry_station(station)
     journey[:entry] = station
   end
 
   def touch_out(station)
-    raise 'ERROR! Not travelling!' if !in_journey?
     deduct(FARE)
     reset_entry_station
     journey[:exit] = station

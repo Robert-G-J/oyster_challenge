@@ -1,104 +1,72 @@
 require 'oystercard'
 
 describe Oystercard do
-  subject(:oystercard) { described_class.new }
+  subject(:card) { described_class.new }
+  let(:station) { double(:station) }
 
   describe '#balance' do
     it 'Should return 0 balance' do
-      expect(oystercard.balance).to eq(0)
+      expect(card.balance).to eq(0)
+    end
+    it 'Raises an error' do
+      low_balance = Oystercard::LOW_BALANCE
+      card.top_up(low_balance - 1)
+      expect { card.touch_in(station) }.to raise_error 'Not enough funds'
+    end
   end
 
   describe '#top_up' do
     it 'Expects #top_up to change balance' do
-    expect { oystercard.top_up(10) }.to change { oystercard.balance }.by(10)
+      expect { card.top_up(10) }.to change { card.balance }.by(10)
     end
 
     it 'Should raise error if top up breaches limit' do
       max_balance = Oystercard::MAX_BALANCE
-      oystercard.top_up(max_balance)
-      expect { oystercard.top_up(1) }.to raise_error "Top-up over max balance £#{max_balance}"
+      card.top_up(max_balance)
+      expect { card.top_up(1) }.to raise_error "Top-up over max balance £#{max_balance}"
     end
   end
 
   describe '#touch_in' do
-    xit 'changes #in_journey? to true' do
-      oystercard.top_up(20)
-      expect { oystercard.touch_in }.to change { oystercard.in_journey? }.to true
+    it 'changes #in_journey? to true' do
+      card.top_up(10)
+      expect { card.touch_in(station) }.to change { card.in_journey? }.to true
     end
-    xit '#touch_in when already travelling raises error' do
-      oystercard.top_up(10)
-      oystercard.touch_in
-      expect { oystercard.touch_in }.to raise_error 'Already travelling'
-    end
-      context 'low_balance' do
-         xit 'Raises an error' do
-          low_balance = Oystercard::LOW_BALANCE
-          oystercard.top_up(low_balance - 1)
-          expect { oystercard.touch_in }.to raise_error 'Not enough funds'
-        end
-      end
   end
 
   describe '#touch_out' do
-    xit 'changes #in_journey to false' do
-      oystercard.top_up(10)
-      oystercard.touch_in
-      expect { oystercard.touch_out }.to change { oystercard.in_journey? }.to false
-    end
-    xit 'raises error if touch_out when not in journey' do
-      expect { oystercard.touch_out }.to raise_error 'ERROR! Not travelling!'
-    end
-      context "change balance" do
-        xit "deducts fare" do
-          oystercard.top_up(20)
-          oystercard.touch_in
-          expect { oystercard.touch_out }.to change {oystercard.balance }.by -2
-        end
-      end
+    before do
+      card.top_up(10)
+      card.touch_in(station)
     end
 
-  describe "#journeys" do
-    let(:entry_station) { double(:entry_station) }
-    let(:exit_station) { double(:exit_station) }
-    let(:journey) { {entry: entry_station, exit: exit_station} }
+    it 'changes #in_journey to false' do
+      expect { card.touch_out(station) }.to change { card.in_journey? }.to false
+    end
 
-      xit "stores an instance of Station" do
-        oystercard.top_up(10)
-        oystercard.touch_in(entry_station)
-        expect(oystercard.entry_station).to eq entry_station
+    context 'change balance' do
+      it 'deducts fare' do
+        expect { card.touch_out(station) }.to change { card.balance }.by(-Oystercard::FARE)
       end
-
-      xit "resets the entry_station when you touch_out" do
-        oystercard.top_up(20)
-        oystercard.touch_in(entry_station)
-        oystercard.touch_out
-        expect(oystercard.entry_station).to be_nil
-      end
-
-      xit { is_expected.to respond_to :all_stations }
-
-      xit "should display all the previous stations" do
-        oystercard.top_up(20)
-        oystercard.touch_in(entry_station)
-        oystercard.touch_out
-        expect(oystercard.journeys).to eq [entry_station]
-      end
-
-      xit "should store a journey" do
-        oystercard.top_up(20)
-        oystercard.touch_in(entry_station)
-        oystercard.touch_out(exit_station)
-        expect(oystercard.journeys).to eq [entry_station, exit_station]
-      end
-
-
-     it "should store the journeys in a hash" do
-       oystercard.top_up(20)
-       oystercard.touch_in(entry_station)
-       oystercard.touch_out(exit_station)
-       expect(oystercard.journeys).to include journey
-     end
-
     end
   end
+
+  describe '#journeys' do
+    let(:journey) { { entry: station, exit: station } }
+
+    before do
+      card.top_up(10)
+      card.touch_in(station)
+      card.touch_out(station)
+    end
+
+    it 'resets the entry_station when you touch_out' do
+      expect(card.entry_station).to be_nil
+    end
+
+    it 'should store the journeys in a hash' do
+      expect(card.journeys).to include journey
+    end
+  end
+
 end

@@ -1,9 +1,11 @@
 require 'station'
 
 describe Station do
-  subject(:station) { described_class.new }
+  subject(:station) { described_class.new(name: "Charing X") }
 
-  describe '#name' do
-    it { is_expected.to respond_to :name }
+  it 'Knows it name' do
+    expect(station.name).to eq(name: "Charing X")
   end
+
+
 end

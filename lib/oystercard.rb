@@ -1,11 +1,12 @@
 
 class Oystercard
 
-  attr_reader :balance, :entry_station, :all_stations
+  attr_reader :balance, :entry_station, :all_stations, :journey
 
   def initialize(balance = 0)
     @balance = balance
     @all_stations = []
+    @journey = {}
   end
 
   def top_up(amount = 0)
@@ -21,6 +22,7 @@ class Oystercard
     raise 'Not enough funds' if balance < LOW_BALANCE
     raise 'Already travelling' if in_journey?
     store_entry_station(station)
+    self.journey[:entry] = station
     update_stations_list(station)
   end
 
@@ -28,13 +30,14 @@ class Oystercard
     raise 'ERROR! Not travelling!' if !in_journey?
     deduct(FARE)
     reset_entry_station
+    self.journey[:exit] = station
     update_stations_list(station)
   end
 
 
   private
 
-  attr_writer :balance, :entry_station, :all_stations
+  attr_writer :balance, :entry_station, :all_stations, :journey
 
   MAX_BALANCE = 100
   LOW_BALANCE = 1
@@ -61,9 +64,13 @@ class Oystercard
   end
 
   def update_stations_list(station)
+<<<<<<< Updated upstream
 
     all_stations << station
 
+=======
+    all_stations << journey
+>>>>>>> Stashed changes
   end
 
 end

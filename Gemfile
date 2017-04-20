@@ -6,7 +6,7 @@ group :test, :development do
   gem 'rubocop'
   gem 'rake'
   gem 'reek'
-  gem 'simplecov', require: false, group: :test
-  gem 'simplecov-console', require: false, group: :test
+  gem 'simplecov', require: false
+  gem 'simplecov-console', require: false
 
 end

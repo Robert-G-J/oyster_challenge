@@ -9,6 +9,7 @@ class Journey
 
   def complete_journey(exit_station)
     self.journey_complete = true
+    self.exit_station = exit_station
   end
 
   def journey_complete?

@@ -16,9 +16,15 @@ describe Journey do
   it { is_expected.to respond_to :exit_station }
 
   describe '#complete_journey' do
+    before(:example) { journey.complete_journey(exit_station) }
+
     it 'sets #journey_complete true' do
-      journey.complete_journey(exit_station)
       expect(journey.journey_complete).to be true
     end
+
+    it 'sets @exit_station to its argument' do
+      expect(journey.exit_station).to eq exit_station
+    end
+      
   end
 end

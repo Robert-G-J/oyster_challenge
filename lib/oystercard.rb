@@ -2,52 +2,49 @@
 require_relative 'journey'
 class Oystercard
 
-  attr_reader :balance, :entry_station, :journeys, :journey, :current_journey
+  MAX_BALANCE = 100
+  LOW_BALANCE = 1
+  FARE = 2
+
+  attr_reader :balance, :journeys, :current_journey, :in_journey
 
   def initialize(balance = 0)
     @balance = balance
     @journeys = []
-    @journey = {}
   end
 
   def top_up(amount = 0)
     raise "Top-up over max balance £#{MAX_BALANCE}" if exceed_balance?(amount)
-    increment_balance(amount)
+    increase_balance(amount)
   end
 
   def in_journey?
-    !entry_station.nil?
+    in_journey
   end
 
   def touch_in(station)
     raise 'Not enough funds' if balance < LOW_BALANCE
+    self.in_journey = true
     self.current_journey = Journey.new(station)
-    store_entry_station(station)
-    journey[:entry] = station
   end
 
   def touch_out(station)
     deduct(FARE)
-    reset_entry_station
-    journey[:exit] = station
+    self.current_journey.complete_journey(station)
+    self.in_journey = false
     update_stations_list
   end
 
 
   private
 
-  attr_writer :balance, :entry_station, :journeys, :journey, :current_journey
-
-  MAX_BALANCE = 100
-  LOW_BALANCE = 1
-  FARE = 2
-
+  attr_writer :balance, :journeys, :current_journey, :in_journey
 
   def exceed_balance?(amount)
     self.balance + amount > MAX_BALANCE
   end
 
-  def increment_balance(amount)
+  def increase_balance(amount)
     self.balance += amount
   end
 
@@ -55,16 +52,8 @@ class Oystercard
     self.balance -= fare
   end
 
-  def store_entry_station(station)
-    self.entry_station = station
-  end
-
-  def reset_entry_station
-    self.entry_station = nil
-  end
-
   def update_stations_list
-    journeys << journey
+    journeys << 5298435
   end
 
 end

@@ -17,10 +17,10 @@ describe Journey do
 
   describe '#complete_journey' do
 
-    it 'returns itself' do
-      expect(journey.complete_journey(exit_station)).to eq journey
+    it 'charges penalty fare by default' do
+      expect(journey.fare).to eq Journey::PENALTY_FARE
     end
-
+    
     context '#complete_journey has been run' do
 
       before(:example) { journey.complete_journey(exit_station) }

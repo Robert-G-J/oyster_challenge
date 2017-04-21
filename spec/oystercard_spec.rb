@@ -62,9 +62,20 @@ describe Oystercard do
       card.touch_out(station)
     end
 
+    it 'Sends @current_journey to @journeys' do
+      current_journey = card.current_journey
+      card.touch_out(station)
+      expect(card.journeys).to include current_journey
+    end
+
+    it 'resets @current_journey to nil' do
+      card.touch_out(station)
+      expect(card.current_journey).to be_nil
+    end
+
     context 'change balance' do
       it 'deducts fare' do
-        expect { card.touch_out(station) }.to change { card.balance }.by(-Oystercard::FARE)
+        expect { card.touch_out(station) }.to change { card.balance }.by(-Journey::FARE)
       end
     end
   end
@@ -77,11 +88,5 @@ describe Oystercard do
       card.touch_in(station)
       card.touch_out(station)
     end
-
-
-    xit 'should store the journeys in a hash' do
-      expect(card.journeys).to include journey
-    end
-  end
 
 end

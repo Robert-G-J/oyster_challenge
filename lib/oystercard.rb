@@ -29,10 +29,11 @@ class Oystercard
   end
 
   def touch_out(station)
-    deduct(FARE)
     self.current_journey.complete_journey(station)
+    deduct(current_journey.fare)
     self.in_journey = false
     update_stations_list
+    self.current_journey = nil
   end
 
 
@@ -53,7 +54,7 @@ class Oystercard
   end
 
   def update_stations_list
-    journeys << 5298435
+    journeys << current_journey
   end
 
 end

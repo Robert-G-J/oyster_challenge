@@ -1,6 +1,8 @@
+# coding: utf-8
+require_relative 'journey'
 class Oystercard
 
-  attr_reader :balance, :entry_station, :journeys, :journey
+  attr_reader :balance, :entry_station, :journeys, :journey, :current_journey
 
   def initialize(balance = 0)
     @balance = balance
@@ -19,6 +21,7 @@ class Oystercard
 
   def touch_in(station)
     raise 'Not enough funds' if balance < LOW_BALANCE
+    self.current_journey = Journey.new(station)
     store_entry_station(station)
     journey[:entry] = station
   end
@@ -33,7 +36,7 @@ class Oystercard
 
   private
 
-  attr_writer :balance, :entry_station, :journeys, :journey
+  attr_writer :balance, :entry_station, :journeys, :journey, :current_journey
 
   MAX_BALANCE = 100
   LOW_BALANCE = 1

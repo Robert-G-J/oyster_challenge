@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'oystercard'
 
 describe Oystercard do
@@ -31,6 +32,18 @@ describe Oystercard do
     it 'changes #in_journey? to true' do
       card.top_up(10)
       expect { card.touch_in(station) }.to change { card.in_journey? }.to true
+    end
+
+    it 'saves a new journey to @current_journey' do
+      card.top_up(50)
+      card.touch_in(station)
+      expect(card.current_journey).to be_an_instance_of Journey
+    end
+
+    it 'sets the journey\'s @entry_station to station' do
+      card.top_up(50)
+      card.touch_in(station)
+      expect(card.current_journey.entry_station).to eq station
     end
   end
 

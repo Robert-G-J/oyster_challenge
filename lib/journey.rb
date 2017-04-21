@@ -1,7 +1,7 @@
 class Journey
 
-  attr_reader :entry_station, :exit_station, :journey_complete
-
+  attr_reader :entry_station, :exit_station, :journey_complete, :fare
+  FARE = 2
 
   def initialize(arg)
     @journey_complete = false
@@ -11,6 +11,7 @@ class Journey
   def complete_journey(exit_station)
     self.journey_complete = true
     self.exit_station = exit_station
+    self.fare = FARE
     self
   end
 
@@ -19,5 +20,5 @@ class Journey
   end
 
   private
-  attr_writer :journey_complete, :exit_station
+  attr_writer :journey_complete, :exit_station, :fare
 end

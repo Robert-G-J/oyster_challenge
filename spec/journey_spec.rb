@@ -33,6 +33,11 @@ describe Journey do
         expect(journey.exit_station).to eq exit_station
       end
 
+      it 'sets @fare to minimum fare' do
+        expect(journey.fare).to eq Journey::FARE
+      end
+        
+
     end
 
   end

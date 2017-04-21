@@ -2,6 +2,7 @@ class Journey
 
   attr_reader :entry_station, :exit_station, :journey_complete
 
+
   def initialize(arg)
     @journey_complete = false
     @entry_station = arg
@@ -17,5 +18,5 @@ class Journey
   end
 
   private
-  attr_writer :journey_complete
+  attr_writer :journey_complete, :exit_station
 end

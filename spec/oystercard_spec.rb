@@ -88,5 +88,6 @@ describe Oystercard do
       card.touch_in(station)
       card.touch_out(station)
     end
+  end
 
 end
